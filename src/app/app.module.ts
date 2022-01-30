@@ -11,6 +11,13 @@ import { GithubUsersEffects } from './+state/github.effects';
 import { githubUsersReducer } from './+state/github.reducer';
 import { environment } from 'src/environments/environment';
 
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,8 +26,15 @@ import { environment } from 'src/environments/environment';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    HttpClientModule, 
-    StoreModule.forRoot({ githubUsers: githubUsersReducer }),
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    StoreModule.forRoot({ githubusers: githubUsersReducer }),
     EffectsModule.forRoot([GithubUsersEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],

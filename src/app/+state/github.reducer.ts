@@ -27,11 +27,17 @@ export const GITHUB_USERS_FEATURE_KEY = 'githubusers';
 export const githubUsersReducer = createReducer(
     initialState,
     on(loadGithubUsersAction, (state, action) => {
-        const newState = { ...state, initialState };
+        const newState = {
+            ...state,
+            githubUsers: [],
+            count: 0,
+            errorId: -1,
+            errorString: ''
+        };
         return newState;
     }),
     on(setGithubUsersAction, (state, action) => {
-        const newState = { ...state, githubUsers: action.payload.items, count: action.payload.total_count };
+        const newState = { ...state, githubUsers: action.payload.items, count: action.payload.items.length };
         return newState;
     }),
     on(githubUsersErrorAction, (state, action) => {
@@ -40,7 +46,7 @@ export const githubUsersReducer = createReducer(
     })
 );
 
-export const getGithubUsersState = createFeatureSelector<GithubUsersState>('GithubUsers');
+export const getGithubUsersState = createFeatureSelector<GithubUsersState>('githubusers');
 
 export const selectAll = createSelector(
     getGithubUsersState,
@@ -48,9 +54,6 @@ export const selectAll = createSelector(
 );
 
 export const selectAllGithubUsers = createSelector(selectAll, (state) =>
-    mapToGithubUsers(state.githubUsers)
-);
+    mapToGithubUsers(state.githubUsers));
 
-export const selectGithubUsersCount = createSelector(selectAll, (state) => {
-    return state.count
-});
+export const selectGithubUsersCount = createSelector(selectAll, (state) => state.count);
