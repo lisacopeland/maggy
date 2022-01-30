@@ -5,7 +5,7 @@ import {
     on,
 } from '@ngrx/store';
 
-import { GithubUser, mapToGithubUsers } from "../github-user.api";
+import { GithubUser, mapToGithubUsers } from '../github-user.api';
 import { loadGithubUsersAction, setGithubUsersAction, githubUsersErrorAction } from './github.actions';
 
 export interface GithubUsersState {
