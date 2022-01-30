@@ -11,5 +11,5 @@ export const setGithubUsersAction = createAction(
 );
 export const githubUsersErrorAction = createAction(
     'GithubUsers: Error',
-    props<{ id: number; error: string }>()
+    props<{ payload: any }>()
 );

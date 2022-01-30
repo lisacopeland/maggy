@@ -5,8 +5,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { select, Store } from '@ngrx/store';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { loadGithubUsersAction } from '../+state/github.actions';
-import { selectAllGithubUsers, selectGithubUsersCount } from '../+state/github.reducer';
+import { selectAllGithubUsers, selectGithubUsersCount, selectGithubUsersError } from '../+state/github.reducer';
 import { GithubUser } from '../github-user.api';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-table',
@@ -21,7 +22,7 @@ export class UserTableComponent implements OnInit {
   dataSource: MatTableDataSource<GithubUser>;
   searchControl = new FormControl();
 
-  constructor(public store: Store) {
+  constructor(public store: Store, private _snackBar: MatSnackBar) {
     this.store
       .pipe(
         select(selectAllGithubUsers)
@@ -41,6 +42,16 @@ export class UserTableComponent implements OnInit {
       .subscribe((count) => {
         this.currentTotal = count;
       });  
+
+    this.store
+      .pipe(
+        select(selectGithubUsersError)
+      )
+      .subscribe((error) => {
+        this.githubUsers = [];
+        this.currentTotal = 0;
+        this._snackBar.open(error.message);
+      });        
   }
 
   ngOnInit(): void {
@@ -50,6 +61,10 @@ export class UserTableComponent implements OnInit {
     ).subscribe(searchValue => {
       this.store.dispatch(loadGithubUsersAction({ search: { userName: searchValue }}));  
     });
+  }
+
+  onRowClick(row: GithubUser) {
+    window.open(row.html_url, "_blank");
   }
 
 }

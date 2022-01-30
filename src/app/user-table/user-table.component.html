@@ -1,46 +1,52 @@
-<!-- header -->
-<div>
-  <mat-form-field>
-    <mat-label>Enter a Name</mat-label>
-    <input matInput placeholder="User Name" [formControl]="searchControl"/>
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
+<div class="wrapper">
+  <!-- header -->
+    <mat-form-field>
+      <mat-label>Enter a Name</mat-label>
+      <input matInput placeholder="User Name" [formControl]="searchControl" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+  <!-- table -->
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Id</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="login">
+      <th mat-header-cell *matHeaderCellDef>Login</th>
+      <td mat-cell *matCellDef="let element">{{ element.login }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="score">
+      <th mat-header-cell *matHeaderCellDef>Score</th>
+      <td mat-cell *matCellDef="let element">{{ element.score }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="url">
+      <th mat-header-cell *matHeaderCellDef>Url</th>
+      <td mat-cell *matCellDef="let element">{{ element.url }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr
+      mat-row
+      (click)="onRowClick(row)"
+      *matRowDef="let row; columns: columns"
+    ></tr>
+  </table>
+
+    <mat-paginator
+    style="margin-top: 20px;"
+      #paginator
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page"
+    >
+    </mat-paginator>
 </div>
-<!-- table -->
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>Id</th>
-    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="login">
-    <th mat-header-cell *matHeaderCellDef>Login</th>
-    <td mat-cell *matCellDef="let element">{{ element.login }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="score">
-    <th mat-header-cell *matHeaderCellDef>Score</th>
-    <td mat-cell *matCellDef="let element">{{ element.score }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="type">
-    <th mat-header-cell *matHeaderCellDef>Type</th>
-    <td mat-cell *matCellDef="let element">{{ element.type }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="url">
-    <th mat-header-cell *matHeaderCellDef>Url</th>
-    <td mat-cell *matCellDef="let element">{{ element.url }}</td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="columns"></tr>
-  <tr mat-row *matRowDef="let row; columns: columns"></tr>
-</table>
-
-<mat-paginator
-  #paginator
-  [pageSize]="10"
-  [pageSizeOptions]="[5, 10, 25, 100]"
-  aria-label="Select page"
->
-</mat-paginator>

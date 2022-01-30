@@ -10,16 +10,14 @@ import { loadGithubUsersAction, setGithubUsersAction, githubUsersErrorAction } f
 
 export interface GithubUsersState {
     githubUsers: GithubUser[];
-    errorId: number;
-    errorString: string;
     count: number;
+    error: any;
 }
 
 const initialState: GithubUsersState = {
     githubUsers: [],
     count: 0,
-    errorId: -1,
-    errorString: ''
+    error: null
 };
 
 export const GITHUB_USERS_FEATURE_KEY = 'githubusers';
@@ -31,8 +29,7 @@ export const githubUsersReducer = createReducer(
             ...state,
             githubUsers: [],
             count: 0,
-            errorId: -1,
-            errorString: ''
+            error: null
         };
         return newState;
     }),
@@ -41,7 +38,7 @@ export const githubUsersReducer = createReducer(
         return newState;
     }),
     on(githubUsersErrorAction, (state, action) => {
-        const newState = { ...state, githubUsers: [], count: 0, errorId: action.id, errorString: action.error };
+        const newState = { ...state, githubUsers: [], count: 0, error: action.payload };
         return newState;
     })
 );
@@ -57,3 +54,5 @@ export const selectAllGithubUsers = createSelector(selectAll, (state) =>
     mapToGithubUsers(state.githubUsers));
 
 export const selectGithubUsersCount = createSelector(selectAll, (state) => state.count);
+
+export const selectGithubUsersError = createSelector(selectAll, (state) => state.error);
