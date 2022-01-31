@@ -24,10 +24,6 @@ export class GithubUser {
             this[key] = defaultValues[key];
         });
     }
-
-    clone() {
-        return new GithubUser(deepCopy(this));
-    }
 }
 
 export function mapToGithubUser(data: unknown): GithubUser {
@@ -40,8 +36,4 @@ export function mapToGithubUsers(data: unknown[]): GithubUser[] {
     } else {
         return null;
     }
-}
-
-export function deepCopy<T>(o: T): T {
-    return JSON.parse(JSON.stringify(o)) as T;
 }

@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { select, Store } from '@ngrx/store';
-import { debounceTime, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, tap } from 'rxjs/operators';
 import { loadGithubUsersAction } from '../+state/github.actions';
 import { selectAllGithubUsers, selectGithubUsersCount, selectGithubUsersError } from '../+state/github.reducer';
 import { GithubUser } from '../github-user.api';
@@ -25,7 +25,7 @@ export class UserTableComponent implements OnInit, AfterViewInit, OnDestroy {
   searchControl = new FormControl();
   private subscription: Subscription = new Subscription();
 
-  constructor(public store: Store, private _snackBar: MatSnackBar) {
+  constructor(public store: Store, private snackBar: MatSnackBar) {
     this.store
       .pipe(
         select(selectAllGithubUsers)
@@ -56,14 +56,14 @@ export class UserTableComponent implements OnInit, AfterViewInit, OnDestroy {
         if (error !== null) {
           this.githubUsers = [];
           this.currentTotal = 0;
-          this._snackBar.open(error.message);
+          this.snackBar.open(error.message);
         }
       });        
   }
 
   ngOnInit(): void {
     this.searchControl.valueChanges.pipe(
-      debounceTime(500),
+      debounceTime(750),
     ).subscribe(() => {
       this.paginator.pageIndex = 0;
       this.loadData();
@@ -77,7 +77,6 @@ export class UserTableComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadData() {
-    console.log('this.paginator', this.paginator);
     this.store.dispatch(loadGithubUsersAction({ payload: { userName: this.searchControl.value, pageNumber: this.paginator.pageIndex, pageSize: this.paginator.pageSize } }));  
   }
 
