@@ -3,7 +3,7 @@ import { GitHubUserResponse } from '../github-user.service';
 
 export const loadGithubUsersAction = createAction(
     'GithubUsers: Load All',
-    props<{ search: { userName: string} }>()
+    props<{ payload: { userName: string, pageNumber: number, pageSize: number } }>()
 );
 export const setGithubUsersAction = createAction(
     'GithubUsers: Set All',

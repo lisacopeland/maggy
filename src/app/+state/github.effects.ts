@@ -13,7 +13,7 @@ export class GithubUsersEffects {
         this.actions$.pipe(
             ofType(loadGithubUsersAction),
             mergeMap((action) =>
-                this.service.query(action.search.userName).pipe(
+                this.service.query(action.payload.userName, action.payload.pageNumber, action.payload.pageSize).pipe(
                     map(response => setGithubUsersAction({ payload: response })),
                     catchError(error => of(githubUsersErrorAction({ payload: error })))
                 )

@@ -34,7 +34,7 @@ export const githubUsersReducer = createReducer(
         return newState;
     }),
     on(setGithubUsersAction, (state, action) => {
-        const newState = { ...state, githubUsers: action.payload.items, count: action.payload.items.length };
+        const newState = { ...state, githubUsers: action.payload.items, count: action.payload.total_count };
         return newState;
     }),
     on(githubUsersErrorAction, (state, action) => {

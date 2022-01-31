@@ -1,26 +1,29 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { select, Store } from '@ngrx/store';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { loadGithubUsersAction } from '../+state/github.actions';
 import { selectAllGithubUsers, selectGithubUsersCount, selectGithubUsersError } from '../+state/github.reducer';
 import { GithubUser } from '../github-user.api';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { merge, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-table',
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.scss']
 })
-export class UserTableComponent implements OnInit {
+export class UserTableComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('paginator') paginator: MatPaginator;
   githubUsers: GithubUser[];
   currentTotal = 0;
-  columns: string[] = ['id', 'login', 'score', 'type', 'url'];
+  hasData = false;
+  columns: string[] = ['avatar', 'login', 'score', 'type', 'url'];
   dataSource: MatTableDataSource<GithubUser>;
   searchControl = new FormControl();
+  private subscription: Subscription = new Subscription();
 
   constructor(public store: Store, private _snackBar: MatSnackBar) {
     this.store
@@ -31,7 +34,9 @@ export class UserTableComponent implements OnInit {
         if (users && users.length) {
           this.githubUsers = users;
           this.dataSource = new MatTableDataSource(this.githubUsers);
-          this.dataSource.paginator = this.paginator;
+          this.hasData = true;
+        } else {
+          this.hasData = false;
         }
       });
 
@@ -48,23 +53,40 @@ export class UserTableComponent implements OnInit {
         select(selectGithubUsersError)
       )
       .subscribe((error) => {
-        this.githubUsers = [];
-        this.currentTotal = 0;
-        this._snackBar.open(error.message);
+        if (error !== null) {
+          this.githubUsers = [];
+          this.currentTotal = 0;
+          this._snackBar.open(error.message);
+        }
       });        
   }
 
   ngOnInit(): void {
-    this.store.dispatch(loadGithubUsersAction({ search: { userName: 'lisa'}}));
     this.searchControl.valueChanges.pipe(
       debounceTime(500),
-    ).subscribe(searchValue => {
-      this.store.dispatch(loadGithubUsersAction({ search: { userName: searchValue }}));  
+    ).subscribe(() => {
+      this.paginator.pageIndex = 0;
+      this.loadData();
     });
+  }
+
+  ngAfterViewInit() {
+    this.subscription.add(merge(this.paginator.page).pipe(
+      tap(() => this.loadData())
+    ).subscribe());
+  }
+
+  loadData() {
+    console.log('this.paginator', this.paginator);
+    this.store.dispatch(loadGithubUsersAction({ payload: { userName: this.searchControl.value, pageNumber: this.paginator.pageIndex, pageSize: this.paginator.pageSize } }));  
   }
 
   onRowClick(row: GithubUser) {
     window.open(row.html_url, "_blank");
+  }
+
+  public ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
 }

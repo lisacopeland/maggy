@@ -17,10 +17,13 @@ export class GithubUserService {
 
   constructor(private http: HttpClient) { }
   baseUrl = `https://api.github.com/search/users`;
-  query(search: string = ''
+  query(search: string = '', page = 0, pageSize = 10
   ): Observable<GitHubUserResponse> {
     let params = new HttpParams();
     params = params.append('q', search);
+    params = params.append('page', page.toString());
+    params = params.append('per_page', pageSize.toString());
+
     return this.http.get<GitHubUserResponse>(this.baseUrl, { params }).pipe(
       map((res) => {
         return res;

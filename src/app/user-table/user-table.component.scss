@@ -1,12 +1,18 @@
+.wrapper {
+    padding-top: 40px;
+    width: 90%;
+    height: 80%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
 table {
   width: 90%;
 }
 
-.wrapper {
-    padding-top: 40px;
-    width: 90%;
-    height: 90%;
-    margin: auto;
+.mat-form-field {
+  width: 300px;
 }
 
 .mat-row .mat-cell {
@@ -17,4 +23,13 @@ table {
 
 .mat-row:hover .mat-cell {
   border-color: blue;
+}
+
+.no-results {
+  height: 300px;
+  text-align: center;
+  margin-top: 200px;
+  font-size: large;
+  font-style: italic;
+  color: #666666;
 }
